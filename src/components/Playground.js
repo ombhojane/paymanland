@@ -238,18 +238,37 @@ function Playground() {
       // Create buildings
       buildings = this.physics.add.staticGroup();
       buildingData.forEach((building) => {
-        const buildingSprite = this.add.rectangle(building.x, building.y, 100, 100, 0x0000ff, 0.5).setInteractive();
-        buildingSprite.setData('buildingInfo', building);
+        // Create invisible interactive area
+        const buildingSprite = this.add.rectangle(building.x, building.y, 100, 100, 0x0000ff, 0)
+          .setInteractive()
+          .setData('buildingInfo', building);
 
-        // Add building name text
-        this.add
-          .text(building.x, building.y - 70, building.name, {
-            fontSize: '20px',
-            fill: '#ffffff',
-            backgroundColor: '#000000',
-            padding: { x: 5, y: 5 },
-          })
-          .setOrigin(0.5);
+        // Add building name with enhanced styling
+        const nameText = this.add.text(building.x, building.y - 70, building.name, {
+          fontSize: '20px',
+          fontFamily: 'Arial',
+          fill: '#2d7794',
+          backgroundColor: '#ffffff',
+          padding: { x: 10, y: 5 },
+          borderRadius: 10,
+          shadow: {
+            offsetX: 2,
+            offsetY: 2,
+            color: '#000000',
+            blur: 4,
+            fill: true
+          }
+        }).setOrigin(0.5);
+
+        // Add a subtle animation to the name
+        this.tweens.add({
+          targets: nameText,
+          y: nameText.y - 5,
+          duration: 1500,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        });
 
         buildings.add(buildingSprite);
       });
@@ -315,38 +334,40 @@ function Playground() {
       });
 
       // Create the styled enter button (initially hidden)
-    enterButton = this.add.text(0, 0, 'Enter to this shop', {
-      fontSize: '24px', // Increased font size for better visibility
-      fontFamily: '"Arial", sans-serif',
-      color: '#ffffff',
-      padding: { x: 20, y: 10 },
-    })
-    .setOrigin(0.5)
-    .setVisible(false)
-    .setInteractive({ useHandCursor: true })
-    .setScrollFactor(0)
-    .setStyle({
-      backgroundColor: '#ffffff',
-      color: '#333333',
-      borderRadius: '20px',
-      padding: '15px 30px',
-      border: '2px solid #333333', // Border for more definition
-    })
-    .on('pointerdown', showShopPopup);
+      enterButton = this.add.text(0, 0, 'Enter to this shop', {
+        fontSize: '24px',
+        fontFamily: '"Arial", sans-serif',
+        color: '#ffffff',
+        padding: { x: 20, y: 10 },
+      })
+      .setOrigin(0.5)
+      .setVisible(false)
+      .setInteractive({ useHandCursor: true })
+      .setScrollFactor(0)
+      .setStyle({
+        backgroundColor: '#2d7794',
+        color: '#ffffff',
+        borderRadius: '20px',
+        padding: '15px 30px',
+        border: '2px solid #ffffff',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
+        boxShadow: '0 4px 8px rgba(45, 119, 148, 0.3)',
+      })
+      .on('pointerdown', showShopPopup);
 
-    enterButton.on('pointerover', () => {
-      enterButton.setStyle({
-        backgroundColor: '#f0f0f0',
-        color: '#333333',
+      enterButton.on('pointerover', () => {
+        enterButton.setStyle({
+          backgroundColor: '#1e5c7a',
+          transform: 'scale(1.05)',
+        });
       });
-    });
-    
-    enterButton.on('pointerout', () => {
-      enterButton.setStyle({
-        backgroundColor: '#ffffff',
-        color: '#333333',
+      
+      enterButton.on('pointerout', () => {
+        enterButton.setStyle({
+          backgroundColor: '#2d7794',
+          transform: 'scale(1)',
+        });
       });
-    });
     
 
 
@@ -590,7 +611,7 @@ function Playground() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: 'transparent',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
