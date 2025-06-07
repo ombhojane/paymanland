@@ -1,0 +1,81 @@
+.landing-container {
+    position: relative;
+    height: 100vh;
+    background-image: url('/public/assets/bgcreateavatar.jpg'); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); 
+  }
+  
+  .content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 600px;
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    animation: fadeInDown 1s ease-in-out;
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    animation: fadeIn 2s ease-in-out;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .btn {
+    padding: 15px 30px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .sign-in-btn {
+    background-color: #f0ad4e;
+    color: #fff;
+  }
+  
+  .sign-up-btn {
+    background-color: #5cb85c;
+    color: #fff;
+  }
+  
+  .btn:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }  
