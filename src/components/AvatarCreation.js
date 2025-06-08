@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AvatarCreation.css';
+import '../animations.css';
 
 function AvatarCreation() {
   const navigate = useNavigate();

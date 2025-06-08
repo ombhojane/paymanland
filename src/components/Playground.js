@@ -4,7 +4,7 @@ import Phaser from 'phaser';
 import GameShop from './GameShop';
 import WalletConnect from './WalletConnect';
 import ChatInterface from './ChatInterface';
-import './Playground.css';
+import '../animations.css';
 
 function Playground() {
   const location = useLocation();
@@ -486,49 +486,170 @@ function Playground() {
   const resetSpeed = () => setSpeed(200);
 
   return (
-    <div className="game-container">
+    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <WalletConnect />
-      <div ref={gameRef} className="game-canvas" />
+      <div ref={gameRef} style={{ width: '100%', height: '100%' }} />
       
       {showWelcomePopup && (
-        <div className="welcome-popup popup-fade-in">
-          <div className="welcome-popup-content">
-            <h2>✨ Welcome to Payman Land! ✨</h2>
-            <p>🏰 Step into a magical world of fashion and technology where dreams become reality!</p>
-            <p>Here you can:</p>
-            <ul>
-              <li>👕 Try on clothes virtually with AR magic</li>
-              <li>💫 Get personalized fashion advice from our experts</li>
-              <li>🔒 Shop securely with PayMan's blockchain technology</li>
-              <li>✨ Explore unique stores with authentic products</li>
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          padding: '30px',
+          borderRadius: '20px',
+          boxShadow: '0 0 20px rgba(45, 119, 148, 0.3)',
+          maxWidth: '500px',
+          width: '90%',
+          zIndex: 1000,
+          animation: 'fadeInTransform 0.5s ease-out',
+          border: '2px solid #2d7794'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '-20px',
+            left: '-20px',
+            right: '-20px',
+            height: '10px',
+            background: 'linear-gradient(90deg, #2d7794, white, #2d7794)',
+            borderRadius: '10px'
+          }}></div>
+          
+          <h2 style={{
+            color: '#2d7794',
+            textAlign: 'center',
+            fontSize: '24px',
+            marginBottom: '20px',
+            fontFamily: 'Arial, sans-serif',
+            textShadow: '2px 2px 4px rgba(45, 119, 148, 0.2)'
+          }}>✨ Welcome to Payman Land! ✨</h2>
+          
+          <div style={{
+            color: '#333',
+            fontSize: '16px',
+            lineHeight: '1.6',
+            marginBottom: '20px'
+          }}>
+            <p style={{ marginBottom: '15px' }}>
+              🏰 Step into a magical world of fashion and technology where dreams become reality!
+            </p>
+            <p style={{ marginBottom: '15px' }}>
+              Here you can:
+            </p>
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: '0 0 20px 0'
+            }}>
+              <li style={{ margin: '10px 0', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: '#2d7794', marginRight: '10px' }}>👕</span> Try on clothes virtually with AR magic
+              </li>
+              <li style={{ margin: '10px 0', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: '#2d7794', marginRight: '10px' }}>💫</span> Get personalized fashion advice from our experts
+              </li>
+              <li style={{ margin: '10px 0', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: '#2d7794', marginRight: '10px' }}>🔒</span> Shop securely with PayMan's blockchain technology
+              </li>
+              <li style={{ margin: '10px 0', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: '#2d7794', marginRight: '10px' }}>✨</span> Explore unique stores with authentic products
+              </li>
             </ul>
-            <button onClick={() => setShowWelcomePopup(false)}>Begin Your Adventure! ✨</button>
           </div>
+          
+          <button 
+            onClick={() => setShowWelcomePopup(false)}
+            style={{
+              backgroundColor: '#2d7794',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '25px',
+              cursor: 'pointer',
+              display: 'block',
+              margin: '0 auto',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              transition: 'transform 0.2s ease',
+              boxShadow: '0 4px 8px rgba(45, 119, 148, 0.2)'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+          >
+            Begin Your Adventure! ✨
+          </button>
         </div>
       )}
       
-      <div className="controls">
-        <div>
-          <h3>Speed Controls:</h3>
-          <button onClick={increaseSpeed}>+100</button>
-          <button onClick={decreaseSpeed}>-100</button>
-          <button onClick={resetSpeed}>Reset</button>
+      <div style={{ position: 'absolute', bottom: '20px', left: '20px', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ background: 'rgba(255, 255, 255, 0.8)', padding: '20px', borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>Speed Controls:</div>
+          <button onClick={increaseSpeed} style={buttonStyle}>+100</button>
+          <button onClick={decreaseSpeed} style={buttonStyle}>-100</button>
+          <button onClick={resetSpeed} style={buttonStyle}>Reset</button>
         </div>
-        <div>
-          <button onClick={() => navigate('/dashboard')}>DASHBOARD</button>
-          <button onClick={() => navigate('/create-avatar')}>Change Avatar</button>
+
+        <div style={{ background: 'rgba(255, 255, 255, 0.8)', padding: '20px', borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <button onClick={() => navigate('/dashboard')} style={buttonStyle}>DASHBOARD</button>
+          <button onClick={() => navigate('/create-avatar')} style={buttonStyle}>Change Avatar</button>
         </div>
       </div>
       
       {showShop && (
-        <div className="shop-popup">
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}>
           <GameShop shopData={currentShop} />
-          <button onClick={() => setShowShop(false)}>✕</button>
+          <button
+            onClick={() => setShowShop(false)}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              background: '#ffffff',
+              color: '#333333',
+              border: 'none',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              fontSize: '20px',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            ✕
+          </button>
         </div>
       )}
       
       {showChat && (
-        <div className="chat-popup">
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
           <ChatInterface 
             npcName={chatData.name}
             onClose={() => setShowChat(false)}
@@ -539,5 +660,15 @@ function Playground() {
     </div>
   );
 }
+
+const buttonStyle = {
+  background: '#4CAF50',
+  color: 'white',
+  padding: '10px 15px',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  transition: 'background 0.3s',
+};
 
 export default Playground;
