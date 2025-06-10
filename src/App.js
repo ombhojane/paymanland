@@ -7,6 +7,7 @@ import AvatarCreation from './components/AvatarCreation';
 import Playground from './components/Playground';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
+import PaymanCallback from './components/PaymanCallback';
 
 function App() {
     console.log("App component is rendering");
@@ -21,6 +22,7 @@ function App() {
           <Route path="/playground" element={<Playground />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/callback" element={<PaymanCallback />} />
         </Routes>
       </div>
     </Router>

@@ -3,6 +3,20 @@
   top: 20px;
   right: 20px;
   z-index: 1000;
+  min-width: 180px;
+  min-height: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.connect-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  min-height: 40px;
 }
 
 .connect-button {
@@ -14,11 +28,23 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 220px;
+}
+
+.connect-button.fallback {
+  display: block;
+  margin-top: 10px;
+  background-color: #0066cc;
 }
 
 .connect-button:hover {
   background-color: #45a049;
   transform: scale(1.05);
+}
+
+.connect-button.fallback:hover {
+  background-color: #0055aa;
 }
 
 .wallet-info {
@@ -104,4 +130,31 @@
   width: 100%;
   margin-top: 15px;
   padding: 12px;
+}
+
+/* New styles for Payman Connect button */
+.payman-connect-btn {
+  position: relative;
+  min-height: 40px;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #ccc;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.loading-indicator {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  z-index: 10;
 } 

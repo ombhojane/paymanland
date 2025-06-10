@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+import WalletConnect from './WalletConnect';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ function Dashboard() {
         <h1 style={styles.title}>Your Collections Dashboard</h1>
       </header>
       <main style={styles.main}>
+        <WalletConnect />
         <p style={styles.welcomeText}>Welcome to your dashboard! Explore your virtual fashion world.</p>
         <button onClick={handleCreateAvatar} style={styles.createAvatarButton}>Create Avatar</button>
       </main>
@@ -58,6 +60,7 @@ const styles = {
     backgroundPosition: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: '#fff',
+    position: 'relative',
   },
   welcomeText: {
     fontSize: '1.5rem',
