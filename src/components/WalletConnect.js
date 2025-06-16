@@ -9,6 +9,7 @@ const WalletConnect = () => {
   const [loading, setLoading] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const connectButtonRef = useRef(null);
+  const isFetchingBalance = useRef(false);
   
   useEffect(() => {
     console.log("WalletConnect component mounted");
@@ -278,218 +279,65 @@ const WalletConnect = () => {
   };
 
   const fetchBalance = async (paymanClient) => {
+    // Prevent multiple simultaneous balance fetches
+    if (isFetchingBalance.current) {
+      console.log("Balance fetch already in progress, skipping...");
+      return;
+    }
+    
+    isFetchingBalance.current = true;
+    
     try {
       console.log("Fetching balance...");
       
-      // First try to get all wallets with different queries
-      let walletsResponse;
-      try {
-        walletsResponse = await paymanClient.ask("show me all my wallets including TSD wallets with their complete balance details");
-        console.log("All wallets response:", walletsResponse);
-      } catch (error) {
-        console.log("All wallets query failed, trying basic list...");
-        walletsResponse = await paymanClient.ask("list all wallets and their balances");
-        console.log("Basic wallets response:", walletsResponse);
-      }
+      // Simple single query approach
+      const balanceResponse = await paymanClient.ask("what is my total TSD balance?");
+      console.log("TSD balance response:", balanceResponse);
       
-      // Try to extract total TSD balance from wallets response
-      let totalTSDBalance = 0;
-      if (walletsResponse && walletsResponse.artifacts && walletsResponse.artifacts.length > 0) {
-        const walletsContent = walletsResponse.artifacts[0].content;
-        console.log("Wallets content:", walletsContent);
-        
-        // Find all TSD amounts in the wallets content
-        const tsdMatches = walletsContent.match(/TSD\s*([\d,]+\.?\d*)/gi);
-        if (tsdMatches) {
-          console.log("Found TSD matches:", tsdMatches);
-          tsdMatches.forEach(match => {
-            const amount = match.match(/([\d,]+\.?\d*)/);
-            if (amount) {
-              const cleanAmount = parseFloat(amount[1].replace(/,/g, ''));
-              totalTSDBalance += cleanAmount;
-            }
-          });
-          console.log("Total TSD balance from wallets:", totalTSDBalance);
-        }
-      }
-      
-      // Try different queries to get balance
-      let balanceResponse;
-      
-      try {
-        // First try to get comprehensive TSD balance
-        balanceResponse = await paymanClient.ask("show me the total TSD balance across ALL my TSD wallets. Include TSD Wallet, TSD Wallet 1, TSD Wallet 3, and TSD Wallet 4");
-        console.log("Comprehensive TSD balance query response:", balanceResponse);
-      } catch (error) {
-        console.log("Comprehensive TSD balance query failed, trying total balance...");
-        
-        try {
-          // Try to get total TSD balance across all wallets
-          balanceResponse = await paymanClient.ask("what is my total TSD balance across all wallets?");
-          console.log("Total TSD balance query response:", balanceResponse);
-        } catch (error2) {
-          console.log("Total TSD balance query failed, trying individual balance...");
-          
-          try {
-            // Try a simple balance query
-            balanceResponse = await paymanClient.ask("show my TSD balance");
-            console.log("TSD balance query response:", balanceResponse);
-          } catch (error3) {
-            console.log("TSD balance query failed, trying wallet balance...");
-            
-            // Try asking for wallet balance
-            balanceResponse = await paymanClient.ask("what's my TSD wallet balance?");
-            console.log("Wallet balance response:", balanceResponse);
-          }
-        }
-      }
-      
-      console.log("Balance response type:", typeof balanceResponse);
-      console.log("Balance response keys:", Object.keys(balanceResponse || {}));
-      
-      // If it's a task response, let's try to get the actual result
-      if (balanceResponse && balanceResponse.taskId) {
-        console.log("Task response detected, checking for result field...");
-        console.log("Response result:", balanceResponse.result);
-        console.log("Response response:", balanceResponse.response);
-        console.log("Full response structure:", JSON.stringify(balanceResponse, null, 2));
-      }
-      
-      // Try to extract balance from the response
       let balanceValue = null;
       
-      if (balanceResponse && typeof balanceResponse === 'object') {
-        // Handle task-based response from Payman API
-        if (balanceResponse.taskId && balanceResponse.artifacts && balanceResponse.artifacts.length > 0) {
-          // Extract from artifacts content (this is where the actual balance is)
-          const artifact = balanceResponse.artifacts[0];
-          if (artifact && artifact.content) {
-            const content = artifact.content;
-            console.log("Artifact content:", content);
-            
-            // Parse markdown content for balance information
-            // Look for multiple patterns to extract the correct balance
-            
-            // Pattern 1: "Total TSD Balance:** $1,000.00"
-            let totalMatch = content.match(/Total TSD Balance[*:\s]*\$?([\d,]+\.?\d*)/i);
-            if (totalMatch) {
-              const cleanAmount = totalMatch[1].replace(/,/g, '');
-              balanceValue = parseFloat(cleanAmount);
-              console.log("Extracted total TSD balance:", balanceValue);
+      // Extract balance from artifacts content
+      if (balanceResponse && balanceResponse.artifacts && balanceResponse.artifacts.length > 0) {
+        const artifact = balanceResponse.artifacts[0];
+        if (artifact && artifact.content) {
+          const content = artifact.content;
+          console.log("Artifact content:", content);
+          
+          // Flexible extraction: handle multiple formats
+          // Pattern 1: Total TSD Balance
+          let totalMatch = content.match(/Total.*?Balance[*:\s|]*\*?\*?\s*\$?([\d,]+\.?\d*)/i);
+          if (totalMatch) {
+            balanceValue = parseFloat(totalMatch[1].replace(/,/g, ''));
+            console.log("Extracted total balance:", balanceValue);
+          } else {
+            // Pattern 2: Spendable Balance (including table format)
+            const spendableMatch = content.match(/Spendable.*?Balance[*:\s|]*\*?\*?\s*\$?([\d,]+\.?\d*)/i);
+            if (spendableMatch) {
+              balanceValue = parseFloat(spendableMatch[1].replace(/,/g, ''));
+              console.log("Extracted spendable balance:", balanceValue);
             } else {
-              // Pattern 2: "Spendable Balance**: $1,000.00" 
-              const spendableMatch = content.match(/Spendable Balance[*:\s]*\$?([\d,]+\.?\d*)/i);
-              if (spendableMatch) {
-                const cleanAmount = spendableMatch[1].replace(/,/g, '');
-                balanceValue = parseFloat(cleanAmount);
-                console.log("Extracted spendable balance:", balanceValue);
-              } else {
-                // Pattern 3: "Grand Total TSD Balance** | **$1,000.00**"
-                const grandTotalMatch = content.match(/Grand Total TSD Balance[*\s|]*\*?\*?\$?([\d,]+\.?\d*)/i);
-                if (grandTotalMatch) {
-                  const cleanAmount = grandTotalMatch[1].replace(/,/g, '');
-                  balanceValue = parseFloat(cleanAmount);
-                  console.log("Extracted grand total balance:", balanceValue);
-                } else {
-                  // Pattern 4: Any dollar amount in table format "| $1,000.00 |"
-                  const tableMatch = content.match(/\|\s*\$?([\d,]+\.?\d*)\s*\|/);
-                  if (tableMatch) {
-                    const cleanAmount = tableMatch[1].replace(/,/g, '');
-                    balanceValue = parseFloat(cleanAmount);
-                    console.log("Extracted table balance:", balanceValue);
-                  }
-                }
+              // Pattern 3: Any $amount in table format
+              const tableMatch = content.match(/\|\s*\$?([\d,]+\.?\d*)\s*\|/);
+              if (tableMatch) {
+                balanceValue = parseFloat(tableMatch[1].replace(/,/g, ''));
+                console.log("Extracted table balance:", balanceValue);
               }
             }
           }
-        } else if (balanceResponse.taskId && balanceResponse.result) {
-          // If there's a result field, use it
-          const result = balanceResponse.result;
-          if (typeof result === 'object') {
-            balanceValue = result.balance || result.amount || result.value;
-          } else if (typeof result === 'string') {
-            // Try to extract number from string result
-            const match = result.match(/([\d,]+\.?\d*)/);
-            balanceValue = match ? parseFloat(match[1].replace(/,/g, '')) : result;
-          } else {
-            balanceValue = result;
-          }
-        } else if (balanceResponse.data) {
-          // If there's a data field, use it
-          const data = balanceResponse.data;
-          if (typeof data === 'object') {
-            balanceValue = data.balance || data.amount || data.value;
-          } else {
-            balanceValue = data;
-          }
-        } else {
-          // Try direct properties
-          balanceValue = balanceResponse.balance || balanceResponse.amount || balanceResponse.value;
         }
-        
-        // If we still don't have a value, try to extract from the response message
-        if (!balanceValue && balanceResponse.response) {
-          const responseText = balanceResponse.response;
-          if (typeof responseText === 'string') {
-            const match = responseText.match(/([\d,]+\.?\d*)\s*TSD/i);
-            balanceValue = match ? parseFloat(match[1].replace(/,/g, '')) : responseText;
-          }
-        }
-        
-        // If no balance found in artifacts, try wallets response fallback
-        if (!balanceValue && typeof balanceResponse === 'object') {
-          console.log("No balance found in response artifacts, trying wallets response...");
-          
-          if (walletsResponse && walletsResponse.artifacts && walletsResponse.artifacts.length > 0) {
-            const walletsContent = walletsResponse.artifacts[0].content;
-            console.log("Parsing wallets content for balance extraction...");
-            
-            // Try to extract all TSD balances and sum them
-            const tsdBalanceMatches = walletsContent.match(/\$?([\d,]+\.?\d*)/g);
-            if (tsdBalanceMatches) {
-              let totalBalance = 0;
-              tsdBalanceMatches.forEach(match => {
-                const amount = match.match(/([\d,]+\.?\d*)/);
-                if (amount) {
-                  const cleanAmount = parseFloat(amount[1].replace(/,/g, ''));
-                  // Only add reasonable balance amounts (not IDs or other numbers)
-                  if (cleanAmount >= 1 && cleanAmount <= 1000000) {
-                    totalBalance += cleanAmount;
-                  }
-                }
-              });
-              if (totalBalance > 0) {
-                balanceValue = totalBalance;
-                console.log("Extracted total balance from wallets response:", balanceValue);
-              }
-            }
-          }
-          
-          if (!balanceValue) {
-            balanceValue = "Unable to parse balance";
-          }
-        }
-        
-      } else if (typeof balanceResponse === 'string') {
-        // Try to extract number from string response
-        const match = balanceResponse.match(/(\d+(?:\.\d+)?)/);
-        balanceValue = match ? parseFloat(match[1]) : balanceResponse;
-      } else {
-        balanceValue = balanceResponse;
       }
       
-      // Use total TSD balance if we calculated it and it's greater than individual balance
-      if (totalTSDBalance > 0 && (!balanceValue || totalTSDBalance > balanceValue)) {
-        setBalance(totalTSDBalance);
-        console.log("Balance set to total TSD balance:", totalTSDBalance);
-      } else {
+      // Set the balance
+      if (balanceValue && balanceValue > 0) {
         setBalance(balanceValue);
-        console.log("Balance set to individual balance:", balanceValue);
+        console.log("Balance set to:", balanceValue);
+      } else {
+        setBalance("Unable to fetch balance");
+        console.log("Could not extract valid balance");
       }
       
     } catch (error) {
       console.error('Failed to fetch balance:', error);
-      console.error('Error details:', error.response?.data || error.message);
       
       if (error.message && error.message.includes('expired')) {
         console.log("Token expired, clearing stored token");
@@ -500,7 +348,10 @@ const WalletConnect = () => {
         alert('Session expired. Please reconnect your wallet.');
       } else {
         alert(`Error fetching balance: ${error.message || 'Unknown error'}`);
+        setBalance("Error fetching balance");
       }
+    } finally {
+      isFetchingBalance.current = false;
     }
   };
 
