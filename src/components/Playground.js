@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import GameShop from './GameShop';
 import WalletConnect from './WalletConnect';
 import ChatInterface from './ChatInterface';
+// import PaymanDebug from './PaymanDebug'; // Commented out for production
 import '../animations.css';
 
 function Playground() {
@@ -191,11 +192,58 @@ function Playground() {
           name: 'Fashion Store', 
           categories: {
             "Trending": [
-              { name: 'T-Shirt', description: 'Comfortable cotton t-shirt', price: '$19.99', buyLink: 'https://www.amazon.in/Amazon-Brand-Symbol-Mens-AW17MPCP9_XL_Tango/dp/B073X33F63', upvotes: 382, image: 'https://tse4.mm.bing.net/th?id=OIP.omIRA7NIb8Gj-OTVvW6XggHaH8&pid=Apihttps://i.pinimg.com/originals/b9/59/cc/b959cce534c8661e181c646c10013922.jpg' },
-              { name: 'Jeans', description: 'Classic blue jeans', price: '$49.99', buyLink: 'https://www.amazon.in/Louis-Philippe-Mens-Jeans-LRDNCSLPL62630_Navy/dp/B0D4Z323HB' , upvotes: 87, image: 'https://m.media-amazon.com/images/I/61r7htRqqDL._SY879_.jpg' },
+              { 
+                name: 'Premium T-Shirt', 
+                description: 'Ultra-soft premium cotton t-shirt with a modern fit. Breathable fabric keeps you comfortable all day long.', 
+                price: '$24.99', 
+                buyLink: 'https://www.amazon.in/Amazon-Brand-Symbol-Mens-AW17MPCP9_XL_Tango/dp/B073X33F63', 
+                upvotes: 382, 
+                image: 'https://m.media-amazon.com/images/I/71G7DJG+dqL._SY741_.jpg' 
+              },
+              { 
+                name: 'Slim-Fit Jeans', 
+                description: 'Classic blue slim-fit jeans with stretch technology. Perfect blend of style and comfort for everyday wear.', 
+                price: '$49.99', 
+                buyLink: 'https://www.amazon.in/Louis-Philippe-Mens-Jeans-LRDNCSLPL62630_Navy/dp/B0D4Z323HB', 
+                upvotes: 287, 
+                image: 'https://m.media-amazon.com/images/I/61r7htRqqDL._SY879_.jpg' 
+              },
             ],
             "New Arrivals": [
-              { name: 'Jacket', description: 'Warm winter jacket', price: '$89.99', buyLink: 'https://www.amazon.in/Pomo-Z-Polyester-Casual-Stylish-Removable/dp/B0CHHRTWGW/' , upvotes: 125, image: 'https://m.media-amazon.com/images/I/71-ngFIxUlL._SX679_.jpg' }
+              { 
+                name: 'Winter Jacket', 
+                description: 'Stylish winter jacket with thermal insulation. Water-resistant outer layer keeps you dry and warm in all conditions.', 
+                price: '$89.99', 
+                buyLink: 'https://www.amazon.in/Pomo-Z-Polyester-Casual-Stylish-Removable/dp/B0CHHRTWGW/', 
+                upvotes: 125, 
+                image: 'https://m.media-amazon.com/images/I/71-ngFIxUlL._SX679_.jpg' 
+              },
+              {
+                name: 'Dress Shirt',
+                description: 'Elegant formal dress shirt made from premium cotton. Perfect for business meetings or special occasions.',
+                price: '$59.99',
+                buyLink: 'https://www.amazon.in/Arrow-Mens-Printed-Regular-ASRRF3346_White_42/dp/B07L5RK4W9/',
+                upvotes: 94,
+                image: 'https://m.media-amazon.com/images/I/71Svj6aqIzL._SY741_.jpg'
+              }
+            ],
+            "Casual Wear": [
+              {
+                name: 'Hooded Sweatshirt',
+                description: 'Comfortable hoodie perfect for casual outings. Features a kangaroo pocket and adjustable drawstring hood.',
+                price: '$39.99',
+                buyLink: 'https://www.amazon.in/Alan-Jones-Clothing-Cotton-Hooded/dp/B07D4XF464/',
+                upvotes: 178,
+                image: 'https://m.media-amazon.com/images/I/61K2EFxk79L._SY741_.jpg'
+              },
+              {
+                name: 'Cargo Pants',
+                description: 'Versatile cargo pants with multiple pockets. Durable construction for outdoor activities and everyday wear.',
+                price: '$45.99',
+                buyLink: 'https://www.amazon.in/GEUM-Relaxed-Casual-Cotton-Regular/dp/B0CZ6YJ75D/',
+                upvotes: 156,
+                image: 'https://m.media-amazon.com/images/I/71vHtdVe9tL._SY741_.jpg'
+              }
             ]
           }
         },
@@ -205,8 +253,58 @@ function Playground() {
           name: 'Shoe Shop', 
           categories: {
             "Trending": [
-              { name: 'Sneakers', description: 'Sporty sneakers', price: '$79.99', buyLink: 'https://example.com/sneakers', upvotes: 93 },
-              { name: 'Boots', description: 'Leather boots', price: '$99.99', buyLink: 'https://example.com/boots', upvotes: 78 }
+              { 
+                name: 'Running Sneakers', 
+                description: 'Lightweight running shoes with advanced cushioning technology. Perfect for daily jogs or marathon training.', 
+                price: '$79.99', 
+                buyLink: 'https://www.amazon.in/Campus-Mens-Running-Shoes-7-CG-203/dp/B0B292FQ81/', 
+                upvotes: 193,
+                image: 'https://m.media-amazon.com/images/I/61+r3+JwxSL._SY625_.jpg'
+              },
+              { 
+                name: 'Leather Boots', 
+                description: 'Premium leather boots with durable construction. Water-resistant and perfect for all weather conditions.', 
+                price: '$99.99', 
+                buyLink: 'https://www.amazon.in/Red-Chief-Rust-Leather-Boots/dp/B0859NKF5L/',
+                upvotes: 178,
+                image: 'https://m.media-amazon.com/images/I/41yr4QQs81L.jpg'
+              }
+            ],
+            "Casual": [
+              {
+                name: 'Canvas Sneakers',
+                description: 'Classic canvas sneakers for a timeless look. Comfortable for all-day wear with durable rubber soles.',
+                price: '$54.99',
+                buyLink: 'https://www.amazon.in/Puma-Unisex-Sneaker-382303-White-Ribbon/dp/B08CDNLH8N/',
+                upvotes: 145,
+                image: 'https://m.media-amazon.com/images/I/71E75yRwCDL._SY625_.jpg'
+              },
+              {
+                name: 'Slip-on Loafers',
+                description: 'Elegant slip-on loafers with memory foam insoles. Perfect blend of comfort and style for casual occasions.',
+                price: '$64.99',
+                buyLink: 'https://www.amazon.in/FAUSTO-Mens-Loafers-Moccasins-F49/dp/B07BR1D161/',
+                upvotes: 132,
+                image: 'https://m.media-amazon.com/images/I/71Nmn3aXUFL._SY625_.jpg'
+              }
+            ],
+            "Sports": [
+              {
+                name: 'Basketball Shoes',
+                description: 'High-performance basketball shoes with ankle support. Enhanced grip for quick movements on the court.',
+                price: '$89.99',
+                buyLink: 'https://www.amazon.in/Adidas-Unisex-Adult-Ownthegame-Basketball/dp/B07S62DVKY/',
+                upvotes: 167,
+                image: 'https://m.media-amazon.com/images/I/71Iot-pQ6YL._SY695_.jpg'
+              },
+              {
+                name: 'Football Cleats',
+                description: 'Professional football cleats designed for optimal traction. Lightweight construction for speed and agility.',
+                price: '$74.99',
+                buyLink: 'https://www.amazon.in/Football-Soccer-Non-Slip-Training-Outdoor/dp/B09XBP32R7/',
+                upvotes: 109,
+                image: 'https://m.media-amazon.com/images/I/51bItK0a1JL._SY695_.jpg'
+              }
             ]
           }
         },
@@ -216,11 +314,58 @@ function Playground() {
           name: 'Accessories', 
           categories: {
             "Trending": [
-              { name: 'Sunglasses', description: 'UV protection sunglasses', price: '$29.99', buyLink: 'https://example.com/sunglasses', upvotes: 56 },
-              { name: 'Watch', description: 'Elegant wristwatch', price: '$149.99', buyLink: 'https://example.com/watch', upvotes: 71 }
+              { 
+                name: 'Polarized Sunglasses', 
+                description: 'Premium polarized sunglasses with UV400 protection. Lightweight frame with durable construction.', 
+                price: '$39.99', 
+                buyLink: 'https://www.amazon.in/Vincent-Chase-Eyewear-Polarized-Sunglasses/dp/B08R74PJKK/', 
+                upvotes: 156,
+                image: 'https://m.media-amazon.com/images/I/51terQSLFrL._SY695_.jpg'
+              },
+              { 
+                name: 'Chronograph Watch', 
+                description: 'Elegant chronograph watch with stainless steel band. Water-resistant up to 50m with luminous hands.', 
+                price: '$149.99', 
+                buyLink: 'https://www.amazon.in/Timex-Chronograph-Black-Watch-TW000Y404/dp/B07H3K85H5/',
+                upvotes: 171,
+                image: 'https://m.media-amazon.com/images/I/71OrsAUDJiL._SY741_.jpg'
+              }
             ],
             "Top Picks": [
-              { name: 'Wallet', description: 'Leather wallet', price: '$19.99', buyLink: 'https://example.com/wallet', upvotes: 49 }
+              { 
+                name: 'Leather Wallet', 
+                description: 'Genuine leather wallet with RFID blocking technology. Multiple card slots and convenient coin pocket.', 
+                price: '$29.99', 
+                buyLink: 'https://www.amazon.in/Hornbull-Buttler-Genuine-Leather-Blocking/dp/B074DZ8YP5/',
+                upvotes: 149,
+                image: 'https://m.media-amazon.com/images/I/71o0X4k3-FL._SY695_.jpg'
+              },
+              {
+                name: 'Laptop Backpack',
+                description: 'Anti-theft laptop backpack with USB charging port. Padded compartments for electronics and multiple organization pockets.',
+                price: '$59.99',
+                buyLink: 'https://www.amazon.in/Fur-Jaden-Anti-Theft-Backpack-Charging/dp/B07G4LJKGV/',
+                upvotes: 187,
+                image: 'https://m.media-amazon.com/images/I/71pfQBLbPaL._SX679_.jpg'
+              }
+            ],
+            "Jewelry": [
+              {
+                name: 'Silver Chain Necklace',
+                description: 'Sterling silver chain necklace with modern design. Hypoallergenic material suitable for everyday wear.',
+                price: '$45.99',
+                buyLink: 'https://www.amazon.in/Shining-Diva-Fashion-Crystal-Necklace/dp/B07418KYCT/',
+                upvotes: 112,
+                image: 'https://m.media-amazon.com/images/I/617TXtrIajL._SY695_.jpg'
+              },
+              {
+                name: 'Elegant Bracelet',
+                description: 'Adjustable bracelet with crystal embellishments. Perfect accessory for both casual and formal occasions.',
+                price: '$35.99',
+                buyLink: 'https://www.amazon.in/Yellow-Chimes-Bracelet-Crystals-Girlfriend/dp/B075MH3RB5/',
+                upvotes: 98,
+                image: 'https://m.media-amazon.com/images/I/71mNMQBVPpL._SY695_.jpg'
+              }
             ]
           }
         }
@@ -465,6 +610,12 @@ function Playground() {
         const buildingInfo = closestBuilding.getData('buildingInfo');
         setCurrentShop(buildingInfo);
         setShowShop(true);
+        
+        // Pause game input when shop is open
+        if (game.input && game.input.keyboard) {
+          game.input.keyboard.enabled = false;
+          game.input.keyboard.preventDefault = true;
+        }
       }
     }
 
@@ -488,6 +639,7 @@ function Playground() {
   return (
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <WalletConnect />
+      {/* <PaymanDebug /> */}
       <div ref={gameRef} style={{ width: '100%', height: '100%' }} />
       
       {showWelcomePopup && (
@@ -602,15 +754,27 @@ function Playground() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'transparent',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           zIndex: 1000,
+          backdropFilter: 'blur(5px)'
         }}>
-          <GameShop shopData={currentShop} />
+          <GameShop 
+            shopData={currentShop} 
+            playerAvatarImage={location.state?.avatarImage || '/assets/ashfront.png'} 
+          />
           <button
-            onClick={() => setShowShop(false)}
+            onClick={() => {
+              setShowShop(false);
+              
+              // Re-enable game input when shop is closed
+              if (gameInstance.current && gameInstance.current.input && gameInstance.current.input.keyboard) {
+                gameInstance.current.input.keyboard.enabled = true;
+                gameInstance.current.input.keyboard.preventDefault = false;
+              }
+            }}
             style={{
               position: 'absolute',
               top: '20px',
