@@ -409,12 +409,56 @@ app.post('/api/payman/webhook', (req, res) => {
   res.status(200).json({ received: true });
 });
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+// Simple health check endpoint (for load balancers)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Server status endpoint
+app.get('/api/status', (req, res) => {
+  res.json({
+    server: 'PaymanLand Multiplayer Server',
+    status: 'running',
+    version: '1.0.0',
     activePlayers: activePlayers.size,
-    uptime: process.uptime() 
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Enhanced Health check endpoint
+app.get('/api/health', (req, res) => {
+  const uptimeSeconds = process.uptime();
+  const uptimeFormatted = {
+    days: Math.floor(uptimeSeconds / 86400),
+    hours: Math.floor((uptimeSeconds % 86400) / 3600),
+    minutes: Math.floor((uptimeSeconds % 3600) / 60),
+    seconds: Math.floor(uptimeSeconds % 60)
+  };
+
+  res.json({ 
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    server: {
+      environment: process.env.NODE_ENV || 'development',
+      port: PORT,
+      nodeVersion: process.version,
+      platform: process.platform
+    },
+    multiplayer: {
+      activePlayers: activePlayers.size,
+      totalConnections: io.engine.clientsCount || 0,
+      usedNames: usedNames.size
+    },
+    uptime: {
+      seconds: Math.floor(uptimeSeconds),
+      formatted: `${uptimeFormatted.days}d ${uptimeFormatted.hours}h ${uptimeFormatted.minutes}m ${uptimeFormatted.seconds}s`
+    },
+    memory: {
+      used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+      unit: 'MB'
+    }
   });
 });
 
